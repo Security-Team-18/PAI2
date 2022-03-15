@@ -13,7 +13,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     valor=input("Cuenta origen, cuenta destino, cantidad\n")
     maker=hmac.new(b"52772321", bytes(valor,"utf-8"), hashlib.sha256)
     digest=maker.hexdigest()
-    s.sendall(bytes(digest,"utf-8"))
-    data = s.recv(1024)
+    s.sendall(bytes(valor+":"+digest,"utf-8"))
+    data = s.recv(2048)
 
 print(f"Received {data!r}")
