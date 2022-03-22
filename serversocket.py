@@ -17,7 +17,15 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             if(len(data.decode('utf-8'))!=0):
                 transf= data.decode('utf-8').split(":")[0]
                 resumen=data.decode('utf-8').split(":")[1]
-                maker=hmac.new(b"52772321", bytes(transf,"utf-8"), hashlib.sha256)
+                nonce=data.decode('utf-8').split(":")[2]+"\n"
+                with open("./almacenamiento/nonces.txt", 'r+') as file:
+                    lines = file.readlines()
+                    print(lines)
+                    if not (nonce in lines):
+                        file.writelines(nonce)
+                    else:
+                        print("Transacción con NONCE repetido")
+                maker=hmac.new(b"1234567890", bytes(transf,"utf-8"), hashlib.sha256)
                 digest=maker.hexdigest()
                 if(digest==resumen):
                     print("Mensaje íntegro")
