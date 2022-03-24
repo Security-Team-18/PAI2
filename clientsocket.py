@@ -16,7 +16,9 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     nonce = secrets.token_urlsafe()
     maker=hmac.new(b"1234567890", bytes(valor,"utf-8"), hashlib.sha256)
     digest=maker.hexdigest()
-    s.sendall(bytes(valor+":"+digest+":"+"IOd8ErImPsL9sGiBQk44OkCJUc0_tQ0eMd5n0LBhOK81","utf-8"))
+    s.sendall(bytes(valor+":"+digest+":"+nonce,"utf-8"))
+    #s.sendall(bytes(valor+":"+digest+":"+"VdxyP5jtTeOHKdOsNxHcy0Xli2OYTON1VcKtg_1wL7w","utf-8"))
+
     data = s.recv(2048)
 
 print(f"Received {data!r}")

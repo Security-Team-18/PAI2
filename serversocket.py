@@ -18,17 +18,20 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                 transf= data.decode('utf-8').split(":")[0]
                 resumen=data.decode('utf-8').split(":")[1]
                 nonce=data.decode('utf-8').split(":")[2]+"\n"
+                verifier= False
                 with open("./almacenamiento/nonces.txt", 'r+') as file:
                     lines = file.readlines()
-                    print(lines)
-                    if not (nonce in lines):
+                    if nonce not in lines:
                         file.writelines(nonce)
                     else:
                         print("Transacción con NONCE repetido")
+                        verifier= True
                 maker=hmac.new(b"1234567890", bytes(transf,"utf-8"), hashlib.sha256)
                 digest=maker.hexdigest()
-                if(digest==resumen):
+                if(digest==resumen and verifier==False):
                     print("Mensaje íntegro")
+                    with open("./almacenamiento/transferencias.txt", 'a+') as f:
+                        f.writelines(data.decode('utf-8').split(":")[0])
                 else:
                     print("Mensaje no íntegro")
             if not data:
